@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from "@nestjs/common";
 import { AppModule } from './app.module';
 import { NestExpressApplication } from "@nestjs/platform-express";
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // const serviceAccount = require("../service-account.json");
@@ -18,17 +19,21 @@ async function bootstrap() {
   //   credential: admin.credential.cert(serviceAccount),
   // });
 
-  // const options = new DocumentBuilder()
-  //   .setTitle('NestJS Role Based Auth Starter')
-  //   .setVersion("0.1")
-  //   .build();
+  const config = new DocumentBuilder()
+    .setTitle('Podiya')
+    .setDescription('The podiya API description')
+    .setVersion('1.0')
+    .addTag('podiya')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
-  // const document = SwaggerModule.createDocument(app, options);
-  // SwaggerModule.setup('docs', app, document);
+  app.useGlobalPipes(new ValidationPipe());
+
   const port = process.env.PORT || 3005;
   await app.listen(port);
 
   return port;
 }
 
-bootstrap().then(port => console.log(`App successfully started on port ${port} !`));
+bootstrap().then(port => console.log(`App successfully started on port ${port}!`));

@@ -1,18 +1,13 @@
-//
-//
-// export class IBase {
-//
-//   @Expose()
-//   id: string;
-//
-//   @Expose()
-//   version: number;
-//
-//   @Expose()
-//   updateDate: Date;
-//
-//   @Expose()
-//   creationDate: Date;
-// }
-//
-// export default IBase;
+import { Expose } from 'class-transformer';
+
+export class IBase {
+  id: string;
+
+  @Expose()
+  updateDate: Date;
+
+  @Expose()
+  creationDate: Date;
+}
+
+export default IBase;

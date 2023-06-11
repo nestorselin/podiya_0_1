@@ -1,9 +1,10 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 const data: any = dotenv.parse(fs.readFileSync(`.env`));
 
-const config = {
+export const dbConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   host: 'localhost',
   port: 5432,
@@ -16,6 +17,8 @@ const config = {
   logging: false,
   logger: 'file',
   migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+  extra: {
+    charset: "utf8mb4_unicode_ci",
+  },
 };
 
-export = config;
