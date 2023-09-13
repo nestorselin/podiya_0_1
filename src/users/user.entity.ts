@@ -1,34 +1,79 @@
-import {
-    Column,
-    Entity,
-} from 'typeorm';
+import { Entity, Column, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { BaseEntity } from '../common/core/base.entity';
 import { Roles } from '../common/constants/Roles';
+import { EventEntity } from '../events/event.entity';
+import { FeedbackEntity } from '../feedbacks/feedback.entity';
 
-@Entity({ name: 'users' })
-export class UserEntity extends BaseEntity {
+@Entity('users')
+export class UserEntity extends BaseEntity{
 
     @Column({ unique: true, nullable: true })
     firebaseUid: string;
 
     @Column()
-    firstName: string;
+    fullName: string;
 
     @Column()
-    lastName: string;
-
-    @Column({ unique: true })
     username: string;
 
     @Column()
     email: string;
 
-    @Column()
-    emailVerificationToken: string;
+    @Column({default: Roles.user})
+    role: Roles;
 
-    @Column({ nullable: true })
+    @Column()
+    phone: string;
+
+    @Column()
     fcmToken: string;
 
-    @Column({ default: Roles.USER })
-    roles: number;
+    @Column()
+    birthdate: Date;
+
+    @Column()
+    bio: string;
+
+    @Column()
+    avatarPath: string;
+
+    @Column()
+    followingCount: number;
+
+    @Column()
+    followersCount: number;
+
+    @Column()
+    averageRating: number;
+
+    @Column()
+    totalRatings: number;
+
+    @Column()
+    createdEventsCount: number;
+
+    @Column()
+    visitedEventsCount: number;
+
+    @OneToMany(() => EventEntity, event => event.user)
+    events: EventEntity[];
+
+    @OneToMany(() => FeedbackEntity, feedback => feedback.user)
+    feedbacks: FeedbackEntity[];
+
+    @ManyToMany(() => UserEntity)
+    @JoinTable({
+        name: 'user_follows',
+        joinColumn: { name: 'followerId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'followingId', referencedColumnName: 'id' },
+    })
+    following: UserEntity[];
+
+    @ManyToMany(() => UserEntity)
+    @JoinTable({
+        name: 'user_follows',
+        joinColumn: { name: 'followingId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'followerId', referencedColumnName: 'id' },
+    })
+    followers: UserEntity[];
 }

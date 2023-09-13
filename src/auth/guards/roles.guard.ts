@@ -4,33 +4,21 @@ import { Roles } from '../../common/constants/Roles';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(
-      private reflector: Reflector,
-  ) {}
+  constructor(private reflector: Reflector) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const roles = this.reflector.getAllAndMerge<Roles[]>('roles', [
-      context.getClass(),
-      context.getHandler(),
-    ]) || [];
-
-    const isPublic = this.reflector.getAllAndOverride<boolean>('public', [
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndMerge<Roles[]>('roles', [
       context.getHandler(),
       context.getClass(),
     ]);
 
-    if (!roles || isPublic) {
+    if (!requiredRoles) {
       return true;
     }
 
-    let isAllowed = false;
+    const request = context.switchToHttp().getRequest();
+    const userRoles = request.user.roles; // Assuming you have user roles in the request
 
-    roles.forEach(role => {
-      if ((context.switchToHttp().getRequest().request.user.roles & role) === role) {
-        isAllowed = true;
-      }
-    });
-
-    return isAllowed;
+    return userRoles.some(role => requiredRoles.includes(role));
   }
 }

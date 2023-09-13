@@ -7,7 +7,7 @@ const data: any = dotenv.parse(fs.readFileSync(`.env`));
 export const dbConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   host: 'localhost',
-  port: 5432,
+  port: 5437,
   username: data.DB_USER,
   password: data.DB_PASSWORD,
   database: data.DB_NAME,
