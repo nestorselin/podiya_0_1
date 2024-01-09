@@ -5,12 +5,12 @@ import { RolesAllowed } from '../auth/decorators/roles.decorator';
 import { Roles } from '../common/constants/Roles';
 
 @Controller("user")
-@UseGuards(RolesGuard)
+//@UseGuards(RolesGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @RolesAllowed(Roles.user, Roles.admin)
+  //@RolesAllowed(Roles.user, Roles.admin)
   getHello(): string {
     return this.userService.getHello();
   }

@@ -4,9 +4,6 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// const serviceAccount = require("../service-account.json");
-
 async function bootstrap() {
   process.env.TZ = "UTC";
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -25,6 +22,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('podiya')
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
